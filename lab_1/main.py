@@ -22,12 +22,11 @@ and get the VCs to suggest ways to improve it."""
 stop_words = ('as', 'to', 'it', 'are', 'is', 'in', 'what', 'the', 'a', 'your', 'with', 'into', 'over', 'but', 'also', 3)
 
 
-top_n = 3
+top_n = 5
 
 
 def calculate_frequences(text):
     if text is None or type(text) is int:
-        #  print("error")
         frequencies = {}
         return frequencies
     else:
@@ -36,13 +35,12 @@ def calculate_frequences(text):
         text_split = text_lower.split(' ')
         text_clean = []
         for word in text_split:
-            if word not in string.punctuation and word not in string.digits and word != " ":
-                word_clean = ''
-                for symbol in word:
-                    if symbol not in string.punctuation and symbol not in string.digits:
-                        word_clean += symbol
-                if word_clean is not '':
-                    text_clean.append(word_clean)
+            word_clean = ''
+            for symbol in word:
+                if symbol not in string.punctuation and symbol not in string.digits:
+                    word_clean += symbol
+            if word_clean is not '':
+                text_clean.append(word_clean)
         counts = collections.Counter(text_clean)
         frequencies = dict(counts.copy())
         return frequencies
@@ -54,15 +52,14 @@ def filter_stop_words(frequencies: dict, stop_words: tuple):
         return frequencies
     else:
         frequencies_filtered = dict(frequencies.copy())
-        keys_to_remove = [key for key, value in frequencies_filtered.items() if type(key) != str]
+        keys_to_remove = [key for key in frequencies_filtered.keys() if type(key) != str]
         for key in keys_to_remove:
             del frequencies_filtered[key]
         for key in stop_words:
             if key in frequencies_filtered:
                 del frequencies_filtered[key]
         for key, value in frequencies_filtered.items():
-            if isinstance(key, str):
-                frequencies_filtered[key] = value
+            frequencies_filtered[key] = value
         return frequencies_filtered
 
 
