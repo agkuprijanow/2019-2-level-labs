@@ -24,7 +24,9 @@ def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: i
         matrix_modified[0][0] = 0
         matrix_modified[0][j] = matrix_modified[0][j-1] + add_weight
     return matrix_modified
-
+"""
+Labour work #2. Levenshtein distance.
+"""
 
 def minimum_value(numbers: tuple) -> int:
     pass
@@ -36,6 +38,7 @@ def fill_edit_matrix(edit_matrix: tuple,
                      substitute_weight: int,
                      original_word: str,
                      target_word: str) -> list:
+
     minimum_value(edit_matrix)
     if type(original_word) is not str or type(target_word) is not str:
         return list(edit_matrix)
