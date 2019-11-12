@@ -1,5 +1,5 @@
 """
-Labour work #2. Levenshtein distance.
+Labour work #2. Levenstein distance.
 """
 
 
