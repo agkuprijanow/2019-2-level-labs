@@ -14,18 +14,16 @@ if __name__ == '__main__':
 class WordStorage:
     def __init__(self):
         self.storage = {}
+        self.identifier = 0
 
     def put(self, word: str) -> int:
-        identifier = 0
-        if word not in self.storage and type(word) is str:
-            identifier += 1
-            # while identifier not in self.storage.values() and identifier is None:
-            #    identifier += 1
-            self.storage[word] = identifier
-        return identifier
+        if word not in self.storage and isinstance(word, str):
+            self.identifier += 1
+            self.storage[word] = self.identifier
+        return self.identifier
 
     def get_id_of(self, word: str) -> int:
-        if word in self.storage:
+        if word in self.storage.keys():
             return self.storage.get(word)
         return -1
 
@@ -62,7 +60,7 @@ class NGramTrie:
             elif len(sentence) - i == self.size:
                 gram.append(sentence[i:])
         for elem in gram:
-            if elem not in self.gram_frequencies:
+            if elem not in self.gram_frequencies.keys():
                 self.gram_frequencies[elem] = 1
             else:
                 self.gram_frequencies[elem] += 1
@@ -101,12 +99,9 @@ class NGramTrie:
 
 def encode(storage_instance, corpus) -> list:
     enc_sentences = []
-    for sentence in corpus:
-        enc_each_sentence = []
-        for word in sentence:
-            word = storage_instance.get_id_of(word)
-            enc_each_sentence.append(word)
-        enc_sentences.append(enc_each_sentence)
+    for word in corpus:
+        coded_word = storage_instance.get_id_of(word)
+        enc_sentences += [coded_word]
     return enc_sentences
 
 
@@ -141,3 +136,40 @@ def split_by_sentence(text) -> list:
     return corpus_output
 
 
+def run():
+    """Step 0. Read the file"""
+    txt = reference_text
+    storage = WordStorage()
+    ngramtrie = NGramTrie(2)
+    """Step 1. Split by sentence and tokenize"""
+    txt = tuple(split_by_sentence(txt))
+
+    """Step 2. Create the <word-number> storage"""
+    # storage = WordStorage()
+    for sent in txt:
+        storage.from_corpus(tuple(sent))
+    encoded_text = []
+
+    """Step 3. Encode"""
+    for sent in txt:
+        encoded_sent = encode(storage, sent)
+        encoded_text.append(encoded_sent)
+
+    """Step 4. Creating n-gram structures"""
+    for enc_sentence in encoded_text:
+        ngramtrie.fill_from_sentence(tuple(enc_sentence))
+    ngramtrie.calculate_log_probabilities()
+
+    """Prediction"""
+    word = 'she'
+    word_id = storage.get_id_of(word)
+    pred = ngramtrie.predict_next_sentence((word_id, ))
+
+    #  print(str(pred))
+    for el in pred:
+        print(storage.get_original_by(el))
+
+    return pred
+
+
+run()
