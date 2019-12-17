@@ -94,7 +94,7 @@ class TfIdfCalculator:
         sort = sorted(self.tf_idf_values[document_index],
                       key=lambda x: int(self.tf_idf_values[document_index][x]), reverse=True)
         rating = sort.index(word)
-        res = (tf_idf, rating)
+        res = (tf_idf, rating + 1)
         return tuple(res)
 
     def dump_report_csv(self):
@@ -116,7 +116,7 @@ class TfIdfCalculator:
                 for i, _ in enumerate(self.tf_values):
                     string += ','
                     if word in self.tf_values[i]:
-                        string += str(self.tf_values[i][word])
+                        string += str(self.tf_values[i][word])  # i - index, word - key
                     else:
                         string += '0'
                 string += ',' + str(self.idf_values[word])
@@ -143,18 +143,8 @@ def run():
     print(tfidf.calculate_idf())
     print(tfidf.calculate())
     print(tfidf.report_on('only', 0))
-    print(tfidf.report_on('ever', 0))
+    print(tfidf.report_on('i', 0))
     tfidf.dump_report_csv()
 
 
 run()
-
-
-        # scenario to check your work
-        # test_texts = clean_tokenize_corpus(REFERENCE_TEXTS)
-        # tf_idf = TfIdfCalculator(test_texts)
-        # tf_idf.calculate_tf()
-        # tf_idf.calculate_idf()
-        # tf_idf.calculate()
-        # print(tf_idf.report_on('good', 0))
-        # print(tf_idf.report_on('and', 1))
