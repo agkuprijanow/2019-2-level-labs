@@ -92,7 +92,7 @@ class TfIdfCalculator:
             return ()
         tf_idf = self.tf_idf_values[document_index][word]
         sort = sorted(self.tf_idf_values[document_index],
-                      key=lambda x: int(self.tf_idf_values[document_index][x]), reverse=True)
+                      key=lambda x: self.tf_idf_values[document_index][x], reverse=True)
         rating = sort.index(word)
         res = (tf_idf, rating + 1)
         return tuple(res)
